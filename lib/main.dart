@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'constant.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const String pageTitle = "Hijaiyah letters with short vowel a";
+    const String pageTitle = "Hijaiyah with short vowel a";
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -33,37 +34,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late AudioPlayer audioPlayer;
   int selectedIndex = -1;
-  static const List<String> arabicChars = [
-    'أَ',
-    'ب',
-    'ت',
-    'ث',
-    'ج',
-    'ح',
-    'خ',
-    'د',
-    'ذ',
-    'ر',
-    'ز',
-    'س',
-    'ش',
-    'ص',
-    'ض',
-    'ط',
-    'ظ',
-    'ع',
-    'غ',
-    'ف',
-    'ق',
-    'ك',
-    'ل',
-    'م',
-    'ن',
-    'ھ',
-    'و',
-    'ي'
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -78,17 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     audioPlayer.stop();
     super.dispose();
-  }
-
-  static List<String> getArabCharWithHarakat(String harakat) {
-    List<String> result = [];
-
-    for (var i = 0; i < arabicChars.length; i++) {
-      var fatha = String.fromCharCode(0x064e);
-      String normalizedString = "${arabicChars[i]}$fatha";
-      result.add(normalizedString);
-    }
-    return result;
   }
 
   @override
@@ -111,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void onCardClicked(int index, String harakat) {
     AudioPlayer audioPlugin = AudioPlayer();
     String idx = (index + 1) < 10 ? '0${index + 1}' : '${index + 1}';
-    audioPlugin.play(AssetSource('audio/fatha/$idx-fatha.mp3'));
+    audioPlugin.play(AssetSource('audio/fatha/$idx-$harakat.mp3'));
     setState(() {
       selectedIndex = index;
     });
@@ -129,11 +88,11 @@ class _MyHomePageState extends State<MyHomePage> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
               ),
-              itemCount: getArabCharWithHarakat('fatha').length,
+              itemCount: getArabCharWithHarakat(Harakat.fatha.name).length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {
-                    onCardClicked(index, 'fatha');
+                    onCardClicked(index, Harakat.fatha.name);
                   },
                   child: Card(
                     color: Colors.white70,
@@ -146,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           : Colors.white38,
                       child: Center(
                         child: Text(
-                          getArabCharWithHarakat('fatha')[index],
+                          getArabCharWithHarakat(Harakat.kasra.name)[index],
                           style: const TextStyle(
                             fontSize: 40,
                           ),
