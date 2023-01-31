@@ -11,12 +11,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const String pageTitle = "Hijaiyah letters with short vowel a";
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Huruf Hijaiya'),
+      home: const MyHomePage(title: pageTitle),
     );
   }
 }
@@ -33,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late AudioPlayer audioPlayer;
   int selectedIndex = -1;
   static const List<String> arabicChars = [
-    'ا',
+    'أَ',
     'ب',
     'ت',
     'ث',
@@ -58,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'ل',
     'م',
     'ن',
-    'ه',
+    'ھ',
     'و',
     'ي'
   ];
@@ -81,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static List<String> getArabCharWithHarakat(String harakat) {
     List<String> result = [];
+
     for (var i = 0; i < arabicChars.length; i++) {
       var fatha = String.fromCharCode(0x064e);
       String normalizedString = "${arabicChars[i]}$fatha";
@@ -92,12 +94,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: hijaiyahCardWidget(
-          context), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
+            Widget>[
+          Flexible(child: hijaiyahCardWidget(context)),
+          const Text('Recitation by al-Muqri Abdul Qadir al-Uthman'),
+          const SizedBox(
+            height: 24,
+          )
+        ]) // This trailing comma makes auto-formatting nicer for build methods.
+        );
   }
 
   void onCardClicked(int index, String harakat) {
@@ -110,41 +118,45 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget hijaiyahCardWidget(BuildContext context) {
-    return MediaQuery.removePadding(
-      context: context,
-      removeTop: true,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            itemCount: getArabCharWithHarakat('fatha').length,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {
-                  onCardClicked(index, 'fatha');
-                },
-                child: Card(
-                  color: Colors.white70,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
-                    height: 200,
-                    width: 200,
-                    color:
-                        selectedIndex == index ? Colors.amber : Colors.white38,
-                    child: Center(
-                      child: Text(
-                        getArabCharWithHarakat('fatha')[index],
-                        style: const TextStyle(
-                          fontSize: 40,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemCount: getArabCharWithHarakat('fatha').length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    onCardClicked(index, 'fatha');
+                  },
+                  child: Card(
+                    color: Colors.white70,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      height: 200,
+                      width: 200,
+                      color: selectedIndex == index
+                          ? Colors.amber
+                          : Colors.white38,
+                      child: Center(
+                        child: Text(
+                          getArabCharWithHarakat('fatha')[index],
+                          style: const TextStyle(
+                            fontSize: 40,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+        ),
       ),
     );
   }
